@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:you_better/models/friend.dart';
+import 'package:you_better/models/user.dart';
 
-class FriendCard extends StatefulWidget {
-  Friend friend;
-  FriendCard({super.key, required this.friend});
+class UserCard extends StatefulWidget {
+  User user;
+  UserCard({super.key, required this.user});
 
   @override
-  State<FriendCard> createState() => _FriendCardState();
+  State<UserCard> createState() => _UserCardState();
 }
 
-class _FriendCardState extends State<FriendCard> {
+class _UserCardState extends State<UserCard> {
   @override
   void initState() {
     super.initState();
@@ -24,7 +24,7 @@ class _FriendCardState extends State<FriendCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            title: Text(widget.friend.name),
+            title: Text(widget.user.name),
           ),
         ],
       ),

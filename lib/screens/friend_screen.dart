@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:you_better/models/friend.dart';
-import 'package:you_better/friend_card.dart';
+import 'package:you_better/models/user.dart';
+import 'package:you_better/widgets/user_card.dart';
 
 class FriendsScreen extends StatefulWidget {
-  List<Friend> friends;
+  List<User> friends;
   FriendsScreen({super.key}) :
         friends = getFriends();
 
@@ -26,7 +26,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
             padding: const EdgeInsets.symmetric(vertical: 8),
             itemCount: widget.friends.length,
             itemBuilder: (context, index) {
-              return FriendCard(friend: widget.friends[index]);
+              return UserCard(user: widget.friends[index]);
             },
           )
         ],

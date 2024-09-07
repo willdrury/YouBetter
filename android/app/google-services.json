@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "957830471194",
+    "project_id": "youbettersandbox",
+    "storage_bucket": "youbettersandbox.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957830471194:android:791716cf60a7d987887ba3",
+        "android_client_info": {
+          "package_name": "com.example.you_better"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBb2iG6Z4e0GcORKii7YGzHvQo9FSUDdeQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:you_better/models/challenge.dart';
-import 'package:you_better/challenge_card.dart';
+import 'package:you_better/screens/new_challenge_screen.dart';
+import 'package:you_better/widgets/challenge_card.dart';
 
 class ChallengeList extends StatefulWidget {
   List<Challenge> challenges;
@@ -13,12 +14,26 @@ class ChallengeList extends StatefulWidget {
 }
 
 class _ChallengeListState extends State<ChallengeList> {
+  void _navigateToCreateNewChallenge(BuildContext context) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (ctx) => const NewChallengeScreen())
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Container(
+            color: Theme.of(context).colorScheme.primary,
+            width: double.infinity,
+            child: TextButton.icon(
+                onPressed: () => _navigateToCreateNewChallenge(context),
+                label: const Text('Create a new challenge', style: TextStyle(color: Colors.white),),
+                icon: const Icon(Icons.edit, color: Colors.white,),
+            ),
+          ),
           ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,

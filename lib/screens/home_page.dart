@@ -1,17 +1,18 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:you_better/challenge_list.dart';
-import 'package:you_better/friend_screen.dart';
-import 'package:you_better/stats_screen.dart';
-import 'package:you_better/settings_screen.dart';
+import 'package:you_better/providers/settings_provider.dart';
+import 'package:you_better/screens/challenge_details.dart';
+import 'package:you_better/widgets/challenge_list.dart';
+import 'package:you_better/screens/friend_screen.dart';
+import 'package:you_better/screens/stats_screen.dart';
+import 'package:you_better/screens/settings_screen.dart';
 import 'package:you_better/models/challenge.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:you_better/widgets/profile.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -27,14 +28,12 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
     currentPage = 0;
-    tabController = TabController(length: 4, vsync: this);
-    tabController.animation!.addListener(
-          () {
-        final value = tabController.animation!.value.round();
-        if (value != currentPage && mounted && value != 2) {
-          changePage(value);
-        }
-      },
+    tabController = TabController(length: 3, vsync: this);
+    tabController.animation!.addListener(() {
+      final value = tabController.animation!.value.round();
+      if (value != currentPage && mounted && value != 2) {
+        changePage(value);
+      }},
     );
   }
 
@@ -57,6 +56,14 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
+  void _setScreen(String identifier) async {
+    if (identifier == 'settings') {
+      Navigator.of(context).push<Map<Setting, bool>>(
+          MaterialPageRoute(builder: (ctx) => const SettingsScreen())
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,17 +71,23 @@ class _MyHomePageState extends State<MyHomePage>
         backgroundColor: Colors.black,
         title: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'YouBetter',
-            style: GoogleFonts.robotoSlab(
-              color: Colors.white,
-              fontSize: 30,
-            ),
-          ),
+          child: Row(
+            children: [
+              Image.asset('assets/images/YouBetterLogo.png', height: 30, width: 30,),
+              const SizedBox(width: 10,),
+              Text(
+                'YouBetter',
+                style: GoogleFonts.robotoSlab(
+                  color: Colors.white,
+                  fontSize: 30,
+                ),
+              ),
+            ],
+          )
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => _setScreen('settings'),
             icon: const Icon(Icons.settings, color: Colors.white,),
           )
         ],
@@ -102,20 +115,20 @@ class _MyHomePageState extends State<MyHomePage>
           physics: const BouncingScrollPhysics(),
           children: [
             ChallengeList(challenges: activeChallenges),
-            const StatsScreen(),
             FriendsScreen(),
-            const SettingsScreen(),
+            const Profile(),
           ],
         ),
         child: TabBar(
+          splashBorderRadius: BorderRadius.circular(30),
           indicatorPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           controller: tabController,
-          indicator: const UnderlineTabIndicator(
+          indicator: UnderlineTabIndicator(
               borderSide: BorderSide(
-                color: Colors.pink,
+                color: Theme.of(context).colorScheme.primary,
                 width: 4,
               ),
-              insets: EdgeInsets.fromLTRB(16, 0, 16, 8)),
+              insets: const EdgeInsets.fromLTRB(16, 0, 16, 8)),
           tabs: const [
             SizedBox(
               height: 55,
@@ -123,15 +136,6 @@ class _MyHomePageState extends State<MyHomePage>
               child: Center(
                   child: Icon(
                     Icons.home,
-                    color: Colors.white,
-                  )),
-            ),
-            SizedBox(
-              height: 55,
-              width: 40,
-              child: Center(
-                  child: Icon(
-                    Icons.trending_up,
                     color: Colors.white,
                   )),
             ),
