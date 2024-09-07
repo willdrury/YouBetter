@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:you_better/models/goal.dart';
 import 'package:you_better/screens/new_goal_screen.dart';
 import 'package:flutter/services.dart';
+import 'package:you_better/screens/select_enforcement_screen.dart';
 import 'package:you_better/widgets/goal_card.dart';
 
 final formatter = DateFormat('EEE, MMM d', 'en_US');
@@ -48,8 +49,13 @@ class _NewChallengeScreenState extends State<NewChallengeScreen> {
   }
 
   void _submitForm(BuildContext context) {
-    if (form.currentState!.validate() && _selectedEndDate != null) {
+    if (form.currentState!.validate() && _selectedEndDate != null && _selectedGoals.isNotEmpty) {
       form.currentState!.save();
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const SelectEnformcementScreen()));
+    }
+    if (_selectedGoals.isEmpty) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('You must have at least one goal to continue')));
     }
   }
 
@@ -143,33 +149,34 @@ class _NewChallengeScreenState extends State<NewChallengeScreen> {
                 ),
               ),
               const SizedBox(height: 20,),
-              Container(
-                height: 300,
+              SizedBox(
+                height: 450,
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (_selectedGoals.isNotEmpty)
-                      for (Goal goal in _selectedGoals)
-                        Container(
-                          width: double.infinity,
-                          child: GoalCard(goal: goal)
-                        ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _navigateToNewGoalScreen(context);
-                      },
-                      child: const Icon(Icons.add),
-                    ),
-                    if (_selectedGoals.isEmpty)
-                      const SizedBox(height: 20,),
-                    if (_selectedGoals.isEmpty)
-                      Text(
-                        'Create your first goal to get started!',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (_selectedGoals.isNotEmpty)
+                        for (Goal goal in _selectedGoals)
+                          SizedBox(
+                            width: double.infinity,
+                              child: GoalCard(goal: goal, onSaveGoal: _addGoal,)
+                          ),
+                      if (_selectedGoals.isEmpty)
+                        const SizedBox(height: 20,),
+                      ElevatedButton(
+                        onPressed: () {
+                          _navigateToNewGoalScreen(context);
+                        },
+                        child: const Icon(Icons.add),
                       ),
-                  ]
+                      if (_selectedGoals.isEmpty)
+                        Text(
+                          'Create your first goal to get started!',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                    ]
+                  ),
                 ),
               ),
               const SizedBox(height: 20,),

@@ -22,29 +22,27 @@ class _ChallengeListState extends State<ChallengeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            color: Theme.of(context).colorScheme.primary,
-            width: double.infinity,
-            child: TextButton.icon(
-                onPressed: () => _navigateToCreateNewChallenge(context),
-                label: const Text('Create a new challenge', style: TextStyle(color: Colors.white),),
-                icon: const Icon(Icons.edit, color: Colors.white,),
-            ),
+    return Column(
+      children: [
+        Container(
+          color: Theme.of(context).colorScheme.primary,
+          width: double.infinity,
+          child: TextButton.icon(
+              onPressed: () => _navigateToCreateNewChallenge(context),
+              label: const Text('Create a new challenge', style: TextStyle(color: Colors.white),),
+              icon: const Icon(Icons.edit, color: Colors.white,),
           ),
-          ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            itemCount: widget.challenges.length,
-            itemBuilder: (context, index) {
-              return ChallengeCard(challenge: widget.challenges[index]);
-            },
-          )
-        ],
-      ),
+        ),
+        ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          itemCount: widget.challenges.length,
+          itemBuilder: (context, index) {
+            return ChallengeCard(challenge: widget.challenges[index]);
+          },
+        )
+      ],
     );
   }
 }

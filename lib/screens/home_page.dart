@@ -1,18 +1,22 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:you_better/models/user.dart';
 import 'package:you_better/providers/settings_provider.dart';
 import 'package:you_better/screens/challenge_details.dart';
 import 'package:you_better/widgets/challenge_list.dart';
 import 'package:you_better/screens/friend_screen.dart';
-import 'package:you_better/screens/stats_screen.dart';
 import 'package:you_better/screens/settings_screen.dart';
 import 'package:you_better/models/challenge.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:you_better/widgets/profile.dart';
 
+final User user = User(
+  name: 'Will Drury',
+);
+
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({super.key}) ;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -87,6 +91,10 @@ class _MyHomePageState extends State<MyHomePage>
         ),
         actions: [
           IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications, color: Colors.white,),
+          ),
+          IconButton(
             onPressed: () => _setScreen('settings'),
             icon: const Icon(Icons.settings, color: Colors.white,),
           )
@@ -116,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage>
           children: [
             ChallengeList(challenges: activeChallenges),
             FriendsScreen(),
-            const Profile(),
+            Profile(user: user,),
           ],
         ),
         child: TabBar(

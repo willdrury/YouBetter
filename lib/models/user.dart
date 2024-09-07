@@ -2,9 +2,10 @@ class User {
   final String name;
   final String id;
   final List<User> friends;
+  String? profileImageUrl;
 
   User({
-    required this.name,
+    required this.name, this.profileImageUrl
   })  : id = '1',
         friends = [];
 }

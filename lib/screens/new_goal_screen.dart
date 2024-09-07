@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:you_better/models/goal.dart';
 
 class NewGoalScreen extends StatefulWidget {
-  NewGoalScreen({super.key, required this.onSaveGoal});
+  NewGoalScreen({super.key, required this.onSaveGoal, this.goal});
 
   void Function(Goal goal) onSaveGoal;
+  Goal? goal;
 
   @override
   State<NewGoalScreen> createState() => _NewGoalScreenState();
@@ -13,9 +14,23 @@ class NewGoalScreen extends StatefulWidget {
 class _NewGoalScreenState extends State<NewGoalScreen> {
   final form = GlobalKey<FormState>();
 
-  GoalType _selectedGoalType = GoalType.checkbox;
-  ReportingType _selectedReportingType = ReportingType.auto;
-  String _enteredName = '';
+  late GoalType _selectedGoalType;
+  late ReportingType _selectedReportingType;
+  late String _enteredName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _enteredName = widget.goal != null
+        ? widget.goal!.name
+        : '';
+    _selectedGoalType = widget.goal != null
+        ? widget.goal!.type
+        : GoalType.checkbox;
+    _selectedReportingType = widget.goal != null
+        ? widget.goal!.reportingType
+        : ReportingType.auto;
+  }
 
   void _submitForm() {
     if (form.currentState!.validate()) {
@@ -69,15 +84,11 @@ class _NewGoalScreenState extends State<NewGoalScreen> {
                         value: type,
                         child: Row(
                           children: [
-                            Container(
-                              width: 16,
-                              height: 16,
-                              color: Colors.black54,
-                            ),
+                            Icon(getGoalTypeIcon(type)),
                             const SizedBox(
                               width: 6,
                             ),
-                            Text(type.name),
+                            Text(getGoalTypeLabel(type)),
                           ],
                         )),
                 ],
@@ -98,15 +109,11 @@ class _NewGoalScreenState extends State<NewGoalScreen> {
                         value: type,
                         child: Row(
                           children: [
-                            Container(
-                              width: 16,
-                              height: 16,
-                              color: Colors.black54,
-                            ),
+                            Icon(getReportingTypeIcon(type)),
                             const SizedBox(
                               width: 6,
                             ),
-                            Text(type.name),
+                            Text(type.name[0].toUpperCase() + type.name.substring(1)),
                           ],
                         )),
                 ],
@@ -117,6 +124,8 @@ class _NewGoalScreenState extends State<NewGoalScreen> {
                 },
               ),
               const SizedBox(height: 16,),
+              if (_selectedReportingType == ReportingType.partner)
+                const Text('TODO Select partner from your friends'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
