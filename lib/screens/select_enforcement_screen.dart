@@ -1,18 +1,82 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:you_better/models/challenge.dart';
 import 'package:you_better/models/enforcement.dart';
+import 'package:you_better/models/goal.dart';
 
-class SelectEnformcementScreen extends StatefulWidget {
-  const SelectEnformcementScreen({super.key});
+class SelectEnforcementScreen extends ConsumerStatefulWidget {
+  SelectEnforcementScreen({
+    super.key,
+    required this.startDate,
+    required this.endDate,
+    required this.challengeName,
+    required this.goals,
+    this.challengeDescription,
+  });
+
+  final DateTime startDate;
+  final DateTime endDate;
+  final String challengeName;
+  final List<Goal> goals;
+  String? challengeDescription;
 
   @override
-  State<StatefulWidget> createState() {
-    return _SelectEnformcementScreenState();
+  ConsumerState<SelectEnforcementScreen> createState() {
+    return _SelectEnforcementScreenState();
   }
 }
 
-class _SelectEnformcementScreenState extends State<SelectEnformcementScreen> {
+class _SelectEnforcementScreenState extends ConsumerState<SelectEnforcementScreen> {
   EnforcementType? _selectedEnforcementType;
+
+  void _submitChallenge() async {
+    try {
+      if (_selectedEnforcementType == null) {
+        return;
+      }
+
+      String? error;
+
+      Enforcement newEnforcement = Enforcement(
+          type: _selectedEnforcementType!,
+      );
+
+      error = await newEnforcement.upload();
+      if (error != null) {
+        throw Exception(error);
+      }
+
+      for (Goal goal in widget.goals) {
+        error = await goal.upload();
+        if (error != null) {
+          throw Exception(error);
+        }
+      }
+
+      Challenge challenge = Challenge(
+          userId: FirebaseAuth.instance.currentUser!.uid,
+          name: widget.challengeName,
+          description: widget.challengeDescription,
+          startDate: widget.startDate,
+          endDate: widget.endDate,
+          enforcementId: newEnforcement.id!,
+          goals: widget.goals.map((goal) => goal.id!).toList()
+      );
+
+      error = await challenge.upload();
+      if (error != null) {
+        throw Exception(error);
+      }
+
+      Navigator.of(context).popUntil((route) => route.isFirst);
+
+    } catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +85,12 @@ class _SelectEnformcementScreenState extends State<SelectEnformcementScreen> {
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text('Choose Enforcement', style: TextStyle(color: Colors.white),),
+        actions: [
+          TextButton(
+            onPressed: _submitChallenge,
+            child: Text('Next', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -56,7 +126,6 @@ class _SelectEnformcementScreenState extends State<SelectEnformcementScreen> {
             if (_selectedEnforcementType !=  null && _selectedEnforcementType == EnforcementType.social)
               const Text('Set up social repercussions'),
           ],
-
         ),
       ),
     );

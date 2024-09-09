@@ -12,6 +12,7 @@ import 'firebase_options.dart';
 final kColorScheme = ColorScheme.fromSeed(seedColor: const Color(0xFFFF9B03)).copyWith(
   primary: const Color(0xFFFF9B03),
   surface: Colors.white,
+  surfaceContainerLow: Colors.white,
 );
 final kColorSchemeDark = ColorScheme.fromSeed(seedColor: const Color(0xffFFBD03), brightness: Brightness.dark);
 

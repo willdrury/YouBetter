@@ -1,11 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:you_better/models/user.dart';
 import 'package:you_better/widgets/friends_list.dart';
+import 'package:you_better/widgets/posts_list.dart';
 
 class FriendsScreen extends StatefulWidget {
-  List<User> friends;
-  FriendsScreen({super.key}) :
-        friends = getFriends();
+  const FriendsScreen({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -15,6 +15,8 @@ class FriendsScreen extends StatefulWidget {
 
 class _FriendsScreenState extends State<FriendsScreen> with SingleTickerProviderStateMixin {
 
+  late List<User> friends;
+
   final List<Tab> _tabs = const [
     Tab(text: 'Posts', icon: Icon(Icons.public),),
     Tab(text: 'Friends', icon: Icon(Icons.group),),
@@ -22,10 +24,20 @@ class _FriendsScreenState extends State<FriendsScreen> with SingleTickerProvider
 
   late TabController _tabController;
 
+  void _getFriends() async {
+    final User currentUser = await getUser();
+    final db = FirebaseFirestore.instance;
+    final snapshot = await db.collection("users").where("id", whereIn: currentUser.friends).get();
+    if (snapshot.docs.isNotEmpty) {
+      friends = snapshot.docs.map((item) => User.fromJson(item.data())).toList();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
+    _getFriends();
   }
 
   @override
@@ -51,8 +63,8 @@ class _FriendsScreenState extends State<FriendsScreen> with SingleTickerProvider
           child: TabBarView(
               controller: _tabController,
               children: [
-                const Text('first item'),
-                FriendsList(friends: widget.friends),
+                const PostsList(),
+                FriendsList(friends: friends),
               ]
           ),
         ),

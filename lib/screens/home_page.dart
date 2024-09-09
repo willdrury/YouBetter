@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:you_better/models/user.dart';
 import 'package:you_better/providers/settings_provider.dart';
-import 'package:you_better/screens/challenge_details.dart';
+import 'package:you_better/screens/inbox_screen.dart';
 import 'package:you_better/widgets/challenge_list.dart';
 import 'package:you_better/screens/friend_screen.dart';
 import 'package:you_better/screens/settings_screen.dart';
@@ -11,10 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:you_better/widgets/profile.dart';
 
-final User user = User(
-  name: 'Will Drury',
-);
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key}) ;
 
@@ -22,9 +18,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  List<Challenge> activeChallenges = getActiveChallenges();
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   late TabController tabController;
   late int currentPage;
 
@@ -50,13 +44,6 @@ class _MyHomePageState extends State<MyHomePage>
   void changePage(int newPage) {
     setState(() {
       currentPage = newPage;
-    });
-  }
-
-  //TODO: navigate to and create challenge screen
-  void _createChallenge() {
-    setState(() {
-      activeChallenges.add(createChallenge());
     });
   }
 
@@ -91,7 +78,11 @@ class _MyHomePageState extends State<MyHomePage>
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push<Map<Setting, bool>>(
+                  MaterialPageRoute(builder: (ctx) => const InboxScreen())
+              );
+            },
             icon: const Icon(Icons.notifications, color: Colors.white,),
           ),
           IconButton(
@@ -122,9 +113,9 @@ class _MyHomePageState extends State<MyHomePage>
           dragStartBehavior: DragStartBehavior.down,
           physics: const BouncingScrollPhysics(),
           children: [
-            ChallengeList(challenges: activeChallenges),
-            FriendsScreen(),
-            Profile(user: user,),
+            ChallengeList(),
+            const FriendsScreen(),
+            const Profile(),
           ],
         ),
         child: TabBar(

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:you_better/models/goal.dart';
 
@@ -38,7 +39,8 @@ class _NewGoalScreenState extends State<NewGoalScreen> {
       widget.onSaveGoal(Goal(
           name: _enteredName,
           type: _selectedGoalType,
-          reportingType: _selectedReportingType
+          reportingType: _selectedReportingType,
+          ownerId: FirebaseAuth.instance.currentUser!.uid,
       ));
       Navigator.of(context).pop();
     }

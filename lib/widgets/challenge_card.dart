@@ -31,7 +31,6 @@ class _ChallengeCardState extends State<ChallengeCard> {
         _navigateToChallengeDetails(context, widget.challenge);
       },
       child: Card(
-        color: Colors.white,
         clipBehavior: Clip.antiAlias,
         margin: const EdgeInsets.all(10),
         child: Column(

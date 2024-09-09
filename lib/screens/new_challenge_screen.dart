@@ -51,7 +51,13 @@ class _NewChallengeScreenState extends State<NewChallengeScreen> {
   void _submitForm(BuildContext context) {
     if (form.currentState!.validate() && _selectedEndDate != null && _selectedGoals.isNotEmpty) {
       form.currentState!.save();
-      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const SelectEnformcementScreen()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => SelectEnforcementScreen(
+        startDate: _selectedStartDate!,
+        endDate: _selectedEndDate!,
+        challengeName: _enteredName!,
+        goals: _selectedGoals,
+        challengeDescription: _enteredDescription,
+      )));
     }
     if (_selectedGoals.isEmpty) {
       ScaffoldMessenger.of(context).clearSnackBars();
@@ -141,7 +147,7 @@ class _NewChallengeScreenState extends State<NewChallengeScreen> {
                       Text(_selectedStartDate != null
                           ? '${formatter.format(_selectedStartDate!)} - ${formatter.format(_selectedEndDate!)}'
                           : 'Select a start and end date',
-                        style: const TextStyle(color: Colors.black, fontSize: 16)),
+                        style: const TextStyle(fontSize: 16)),
                       const Spacer(),
                       const Icon(Icons.calendar_month),
                     ],

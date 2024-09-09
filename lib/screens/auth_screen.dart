@@ -36,18 +36,16 @@ class _AuthScreenState extends State<AuthScreen> {
         _isAuthenticating = true;
       });
       if (_isLogin) {
-        print('attempting to login');
         final userCredentials = await _firebase.signInWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword
         );
 
-        // await FirebaseFirestore.instance.collection('users').doc('${userCredentials.user!.uid}').set({
-        //   'username': _enteredUsername,
-        //   'email': _enteredEmail,
-        //   'image_url': imageUrl,
-        // });
+        await FirebaseFirestore.instance.collection('users').doc(userCredentials.user!.uid).set({
+          'username': _enteredUsername,
+          'email': _enteredEmail,
+        });
       }
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {

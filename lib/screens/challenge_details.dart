@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:you_better/models/challenge.dart';
-import 'package:you_better/providers/challenge_provider.dart';
 
 class ChallengeDetails extends StatelessWidget {
 
@@ -14,6 +13,7 @@ class ChallengeDetails extends StatelessWidget {
         title: Text(challenge.name),
       ),
       body: Container(
+        width: double.infinity,
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
